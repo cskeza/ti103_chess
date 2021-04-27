@@ -1,40 +1,72 @@
 """
-Ce module représente l'échiquier.
+Ce modulerepresents the chessboard.
 
-C'est lui qui va gérer les événements des joueurs et prendre en charge l'affichage du jeu sur l'écran. Pour ce faire,
-nous avons besoin des packages pygame et chess. Pygame est le moteur de jeu qui réagit aux clicks des souris. chess lui
-est le moteur de jeu d'échecs, celui qui valide si le mouvement proposé par le joueur est valide.
+It is he who will manage the events of the players and take charge of the display of the game on the screen. To do this,
+we need the pygame and chess packages. Pygame is the game engine that reacts to mouse clicks. chess him
+is the engine of the chess game, the one that validates if the movement proposed by the player is valid.
 
-Ce module est composé de plusieurs éléments:
-1. Une classe pour décrire une pièce du jeu particulière
-2. Une classe pour décrire l'échiquier lui-même.
-3. Une initiale pour chaque type de pièce, afin de représenter un mouvement.
-"""
+This module is made up of several elements:
+1. A class to describe a particular game piece
+2. A class to describe the chess board itself.
+3. An initial for each type of part, to represent a movement.
+"" "
+
+
 import chess
 import pygame
 import sys
 
 
-# On code le dictionnaire qui représente les pièces d'échec. Les initiales servent à décrire la pièce lors de son
-# mouvement. Par exemple 'e5' représente le mouvement d'un pion vers la case e5, alors que Nb3 représente le déplacement
-# d'un cavalier vers la case b3.
-piece_initiale = {
-    'Roi': 'K',
-    'Dame': 'D',
-    'Fou': 'B',
-    'Cavalier': 'N',
+# We code the dictionary which represents the chess pieces. The initials are used to describe the piece when it is
+# movement. For example 'e5' represents the movement of a pawn towards the e5 square, while Nb3 represents the movement
+# of a jumper to box b3.
+initial_piece = {
+    'King': 'K',
+    'Lady': 'D',
+    'Crazy': 'B',
+    'Jumper': 'N',
     'Tour': 'R',
-    'Pion': ''
+    'Pawn': ''
 }
+
 
 
 class Piece:
     """
-    Représente une simple pièce d'échec.
+Represents
+a
+simple
+chess
+piece.
 
-    Une pièce possède un nom et une couleur. Elle a aussi une case, et donc possède des coordonnées à l'écran. Elle
-    possède enfin une image, et une référence à la surface de jeu à afficher.
-    """
+A
+part
+has
+a
+name and a
+color.It
+also
+has
+a
+box, and therefore
+has
+coordinates
+on
+the
+screen.It
+finally has
+an
+image, and a
+reference
+to
+the
+playing
+surface
+to
+be
+displayed.
+
+"""
     def __init__(self, nom, couleur, x, y, taille, image, ecran):
         self.nom = nom
         self.couleur = couleur
@@ -47,9 +79,11 @@ class Piece:
         """
         Cette méthode force l'affichage de la pièce sur l'écran.
 
-        Un rectangle de la surface de jeu est redefini pour son affichage. Pour afficher le rectangle, on va avoir
-        besoin de connaître les coordonnées de son coin en haut à gauche. Ce seront les coordonnées possédées par la
-        pièce elle-même. La taille du rectangle viendra de la dimension de l'image elle-même.
+        A rectangle of the playing surface is redefined for its display. To display the rectangle, we will have
+        need to know the coordinates of its top left corner. These will be the coordinates possessed by the
+        piece itself. The size of the rectangle will come from the dimension of the image itself.
+
+
 
              (x, y)
                   +------largeur --------+
