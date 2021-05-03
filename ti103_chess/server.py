@@ -1,57 +1,22 @@
-import flask
 
-import blockchain as bc
+import json
 
+from flask import Flask, request
+from flask_socketio import SocketIO
 
-app = flask.Flask("Echaines")   # flask.Flask(__name__)
-b = None                        # BAD PRACTICE GUILLAUME... Ne faites pas ca seuls a la maison les amis...
+app = Flask(__name__)
 
+socket_app = SocketIO(app)
 
-@app.route('/')
-def nouvelle_chaine():
-    """
-    Une nouvelle chaine est creee
-    """
-    global b
-    b = bc.BlockChain()
-    return "<h1>New Blockchain</h1><p>Successfully created new blockchain</p>"
+@socket_app.on('connected')
+def handle_id(data):
+    print("Receiving data")
+    print(data)
+    data_recv = json.loads(data)
+    brd_cast = data_recv["move"]
+    x = {"sid": data_recv["sid"], "move": brd_cast}
+    x_json = json.dumps(x)
+    socket_app.emit("server response",x_json, broadcast=True)
 
-
-@app.route('/new')
-def nouveau_bloc():
-    """
-    On ajoute un nouveau bloc a la chaine (si necessaire).
-    """
-    if b is None:
-        return "<h1>New Block</h1><p>Error - No blockchain available</p>"
-
-    b.new()
-    return "<h1>New Block</h1><p>Succesfully created new block</p>"
-
-
-@app.route('/head')
-def head():
-    """
-    Retourne le bloc le plus recent de la chaine.
-    """
-    if b is None:
-        return "<h1>New Block</h1><p>Error - No blockchain available</p>"
-
-    return f"<h1>Head</h1><p>Hash of last block: {b.head().hash()}</p>"
-
-
-@app.route('/add/<mouvement>')
-def add(mouvement):
-    """
-    On dit au serveur qu'un nouveau mouvement a ete effectue.
-    """
-    global b
-    if b is None:
-        b = bc.BlockChain()
-
-    b.head().transactions.add("e4")
-    return f"<h1>Ajout d'un mouvement</h1><p>Succesfully added new move {mouvement}</p>"
-
-
-if __name__ == "__main__":
-    app.run("0.0.0.0", 8000)
+if __name__ == '__main__':
+    socket_app.run(app, debug=True, host='127.0.0.1', port=3000)
